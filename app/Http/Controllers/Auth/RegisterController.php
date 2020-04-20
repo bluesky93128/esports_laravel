@@ -6,6 +6,7 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use DB;
 
 class RegisterController extends Controller
 {
@@ -27,7 +28,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/admin/home';
 
     /**
      * Create a new controller instance.
@@ -60,12 +61,34 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return User
      */
-    protected function create(array $data)
+    // protected function create(array $data)
+    // {
+    //     return User::create([
+    //         'name' => $data['name'],
+    //         'email' => $data['email'],
+    //         'password' => bcrypt($data['password']),
+    //     ]);
+    // }
+    public function create()
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
+        $team_data = DB::table('teams')->get();
+        return view('auth.register', ['team_data' => $team_data]);
+    }
+
+    public function store()
+    {
+        $this->validate(request(), [
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'email' => 'required|email',
+            'phone_number' => 'required',
+            'password' => 'required'
         ]);
+        
+        $user = User::create(request(['firstname', 'lastname', 'email', 'phone_number', 'username', 'password', 'team_id']));
+        
+        auth()->login($user);
+        
+        return redirect()->to('/admin/home');
     }
 }
