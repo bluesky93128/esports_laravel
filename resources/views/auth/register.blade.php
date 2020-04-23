@@ -239,6 +239,36 @@
                 }
 
             });
+        });
+
+        $("#age_group_id").on('change', function() {
+            console.log("class = ", $("#class_id").val());
+            console.log("state = ", $("#state_id").val());
+            console.log("sport = ", $("#sport_id").val());
+            console.log("age_group = ", $("#age_group_id").val());
+            $.ajax({
+
+                type:'POST',
+
+                url:'/api/get-rest-register-data',
+
+                data:{
+                    info: 'get_teams_data', 
+                    sport_id: $("#sport_id").val(), 
+                    state_id: $("#state_id").val(), 
+                    class_id: $("#class_id").val(),
+                    age_group_id: $("#age_group_id").val()
+                },
+
+                success:function(data){
+                    console.log("response data = ", data);
+                    $("#team_id").html("");
+                    data.forEach((item) => {
+                        $("#team_id").append('<option id="'+item.ID+'" value="'+item.ID+'">'+item.team_title+'</option>');
+                    });
+                }
+
+            });
         })
     </script>
 
