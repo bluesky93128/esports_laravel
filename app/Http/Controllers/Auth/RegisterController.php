@@ -71,8 +71,9 @@ class RegisterController extends Controller
     // }
     public function create()
     {
-        $team_data = DB::table('teams')->get();
-        return view('auth.register', ['team_data' => $team_data]);
+        $team_data = DB::table('wp_utpe_usssa_terms')->where('taxonomy', 'sport')->get();
+        $state_data = DB::table('wp_utpe_usssa_terms')->where('taxonomy', 'state')->get();
+        return view('auth.register', ['team_data' => $team_data, 'state_data' => $state_data]);
     }
 
     public function store()
@@ -85,7 +86,19 @@ class RegisterController extends Controller
             'password' => 'required'
         ]);
         
-        $user = User::create(request(['firstname', 'lastname', 'email', 'phone_number', 'username', 'password', 'team_id']));
+        $user = User::create(request([
+            'firstname', 
+            'lastname', 
+            'email', 
+            'phone_number', 
+            'username', 
+            'password', 
+            'state_id',
+            'sports_id',
+            'class_id',
+            'age_group_id',
+            'team_name',
+        ]));
         
         auth()->login($user);
         

@@ -80,14 +80,56 @@
                             </div>
                         </div>
 
+                        <div class="form-group{{ $errors->has('state_id') ? ' has-error' : '' }}">
+                            <label for="state_id" class="col-md-4 control-label">State</label>
+
+                            <div class="col-md-6">
+                                <select id="state_id" class="form-control" name="state_id">
+                                    @foreach($state_data as $key => $data)
+                                        <option id="{{$data->term_id}}" value="{{$data->term_id}}">{{$data->term_id}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group{{ $errors->has('sport_id') ? ' has-error' : '' }}">
+                            <label for="sport_id" class="col-md-4 control-label">Sports</label>
+
+                            <div class="col-md-6">
+                                <select id="sport_id" class="form-control" name="sport_id">
+                                    @foreach($team_data as $key => $data)
+                                        <option id="{{$data->term_id}}" value="{{$data->term_id}}">{{$data->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group{{ $errors->has('class_id') ? ' has-error' : '' }}">
+                            <label for="class_id" class="col-md-4 control-label">Classes</label>
+
+                            <div class="col-md-6">
+                                <select id="class_id" class="form-control" name="class_id">
+                                    
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group{{ $errors->has('age_group_id') ? ' has-error' : '' }}">
+                            <label for="age_group_id" class="col-md-4 control-label">Age Group</label>
+
+                            <div class="col-md-6">
+                                <select id="age_group_id" class="form-control" name="age_group_id">
+                                    
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="form-group{{ $errors->has('team_id') ? ' has-error' : '' }}">
                             <label for="team_id" class="col-md-4 control-label">Teams</label>
 
                             <div class="col-md-6">
                                 <select id="team_id" class="form-control" name="team_id">
-                                    @foreach($team_data as $key => $data)
-                                        <option value="{{$data->id}}">{{$data->name}}</option>
-                                    @endforeach
+                                    
                                 </select>
                             </div>
                         </div>
@@ -128,3 +170,64 @@
     </div>
 </div>
 @endsection
+
+@section('javascript')
+    @parent
+    <script>
+        $("#sport_id").on('change', function(){
+            console.log($(this).val());
+            $.ajax({
+
+                type:'POST',
+
+                url:'/api/get-rest-register-data',
+
+                data:{info: 'get_classes', sport_id: $(this).val()},
+
+                success:function(data){
+                    console.log("response data = ", data);
+                    $("#class_id").html("");
+                    data['classes'].forEach((item) => {
+                        $("#class_id").append('<option id="'+item.class_id+'" value="'+item.class_id+'">'+item.class_id+'</option>');
+                    });
+                    $("#age_group_id").html("");
+                    data['age_group'].forEach((item) => {
+                        $("#age_group_id").append('<option id="'+item.age_group_id+'" value="'+item.age_group_id+'">'+item.age_group_id+'</option>');
+                    });
+                }
+
+            });
+        })
+
+        $("#classes").on('change', function() {
+            console.log("class = ", $(this).val());
+            console.log("state = ", $("#state_id").val());
+            console.log("sport = ", $("#sports_id").val());
+            console.log("age_group = ", $("#age_group_id").val());
+            $.ajax({
+
+                type:'POST',
+
+                url:'/api/get-rest-register-data',
+
+                data:{
+                    info: 'get_teams_data', 
+                    sport_id: $("#sport_id").val(), 
+                    state_id: $("#state_id").val(), 
+                    class_id: $(this).val(),
+                    age_group_id: $("#age_group_id").val()
+                },
+
+                success:function(data){
+                    console.log("response data = ", data);
+                    $("#team_id").html("");
+                    data.forEach((item) => {
+                        $("#team_id").append('<option id="'+item.ID+'" value="'+item.ID+'">'+item.team_title+'</option>');
+                    });
+                }
+
+            });
+        })
+    </script>
+
+@stop
