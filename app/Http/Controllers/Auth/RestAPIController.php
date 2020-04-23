@@ -15,9 +15,11 @@ class RestAPIController extends Controller
         $input = $request->all();
 
         if($input['info'] == "get_classes") {
-            $query = "select * from wp_utpe_usssa_sport_relationship where sport_id='".$input['sport_id']."' GROUP BY class_id";
+            $query = "select * from (select * from wp_utpe_usssa_sport_relationship where wp_utpe_usssa_sport_relationship.sport_id='".$input['sport_id']."') tbl_data
+            LEFT JOIN wp_utpe_usssa_termmeta on tbl_data.class_id=wp_utpe_usssa_termmeta.term_id group by meta_value";
             $classes = DB::select($query);
-            $query = "select * from wp_utpe_usssa_sport_relationship where sport_id='".$input['sport_id']."' GROUP BY age_group_id";
+            $query = "select * from (select * from wp_utpe_usssa_sport_relationship where wp_utpe_usssa_sport_relationship.sport_id='".$input['sport_id']."') tbl_data
+            INNER JOIN wp_utpe_usssa_terms on tbl_data.age_group_id=wp_utpe_usssa_terms.term_id group by name";
             $age_group = DB::select($query);
             return response()->json(['classes'=>$classes, 'age_group'=>$age_group])->header('Content-Type', 'text/json');
         } else if($input['info'] == "get_teams_data") {

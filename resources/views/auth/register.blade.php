@@ -67,7 +67,7 @@
                         </div>
 
                         <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}">
-                            <label for="username" class="col-md-4 control-label">PS4 Username</label>
+                            <label for="username" class="col-md-4 control-label">Twitch Channel</label>
 
                             <div class="col-md-6">
                                 <input id="username" type="username" class="form-control" name="username" value="{{ old('username') }}" required>
@@ -86,7 +86,7 @@
                             <div class="col-md-6">
                                 <select id="state_id" class="form-control" name="state_id">
                                     @foreach($state_data as $key => $data)
-                                        <option id="{{$data->term_id}}" value="{{$data->term_id}}">{{$data->term_id}}</option>
+                                        <option id="{{$data->term_id}}" value="{{$data->term_id}}">{{$data->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -130,6 +130,18 @@
                             <div class="col-md-6">
                                 <select id="team_id" class="form-control" name="team_id">
                                     
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group{{ $errors->has('skill_level') ? ' has-error' : '' }}">
+                            <label for="skill_level" class="col-md-4 control-label">Skill Level</label>
+
+                            <div class="col-md-6">
+                                <select id="skill_level" class="form-control" name="skill_level">
+                                    <option value="begineer">Begineer</option>
+                                    <option value="normal">Normal</option>
+                                    <option value="expert">Expert</option>
                                 </select>
                             </div>
                         </div>
@@ -188,21 +200,21 @@
                     console.log("response data = ", data);
                     $("#class_id").html("");
                     data['classes'].forEach((item) => {
-                        $("#class_id").append('<option id="'+item.class_id+'" value="'+item.class_id+'">'+item.class_id+'</option>');
+                        $("#class_id").append('<option id="'+item.class_id+'" value="'+item.class_id+'">'+item.meta_value+'</option>');
                     });
                     $("#age_group_id").html("");
                     data['age_group'].forEach((item) => {
-                        $("#age_group_id").append('<option id="'+item.age_group_id+'" value="'+item.age_group_id+'">'+item.age_group_id+'</option>');
+                        $("#age_group_id").append('<option id="'+item.age_group_id+'" value="'+item.age_group_id+'">'+item.name+'</option>');
                     });
                 }
 
             });
         })
 
-        $("#classes").on('change', function() {
+        $("#class_id").on('change', function() {
             console.log("class = ", $(this).val());
             console.log("state = ", $("#state_id").val());
-            console.log("sport = ", $("#sports_id").val());
+            console.log("sport = ", $("#sport_id").val());
             console.log("age_group = ", $("#age_group_id").val());
             $.ajax({
 

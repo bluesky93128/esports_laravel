@@ -94,10 +94,11 @@ class RegisterController extends Controller
             'username', 
             'password', 
             'state_id',
-            'sports_id',
+            'sport_id',
             'class_id',
             'age_group_id',
-            'team_name',
+            'team_id',
+            'skill_level',
         ]));
         
         auth()->login($user);
